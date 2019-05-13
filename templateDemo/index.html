@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>前端模板引擎</title>
+    <style>
+      .last-item {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="content">111</div>
+    <script src="template.js"></script>
+    <script>
+      // 模板字符串
+      // 1.模板规则-模板标识符： {{}}、 <%%>…… 2.替换内容：植入操作逻辑、变量…… 3.渲染器：将数据绑定渲染模板
+      // var template = "hello {{name}}";
+      // var data = {
+      //   name: 'Shirley'
+      // };
+      // render(template,data);
+      // template("", {
+      //   evalute: /{{([\s\S]+?)}}/g, // 逻辑
+      //   interpolate: /{{=([\s\S]+?)}}/g, // 变量
+      //   escape: /{{-([\s\S]+?)}}/g // 逃逸的字符
+      // });
+
+      // var compiled = template("hello:<%alert(1)%>");
+      var data = '000'
+      var compiled = template("hello:<%=name%>");
+      compiled({
+        name: 'max'
+      });
+      console.log(compiled({name: 'max'}));
+      console.log(compiled({name: 'Shirley'}));
+    </script>
+    <script type="text/template.js" id="tpl">
+      <ul class="list">
+        <% obj.forEach(function(e, i, a){%>
+          <% if (i === a.length - 1) {%>
+            <li class="last-item"><%=e.name%></li>
+          <%}%>
+          <% else {%>
+            <li><%=e.name%></li>
+          <%}%>
+        <%)}%>
+      </ul>
+    </script>
+    <script>
+      // 模拟数据
+      var data = [{
+        name: 'apple'
+      }, {
+        name: 'banana'
+      }, {
+        name: 'orange'
+      }]
+      var compiled = template(document.getElementById("tpl").innerHTML);
+      var str = compiled(data);
+      document.querySelector("div").innerHTML = str;
+    </script>
+  </body>
+</html>
