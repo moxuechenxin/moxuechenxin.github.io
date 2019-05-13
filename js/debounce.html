@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>debounce</title>
+    <style>
+      #container{
+        width: 400px;
+        height: 200px;
+        margin: auto;
+        line-height: 200px;
+        text-align: center;
+        color: #fff;
+        background-color: purple;
+        font-size: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script type="text/javascript">
+      // 防抖节流的作用: 减少不必要的计算 不浪费资源 只在适合的时候进行计算
+      // 防抖：当持续触发事件时，一定时间内没有再次触发事件，事件处理函数才会执行一次；如果设定时间到来之前，又一次触发事件，就重新开始延迟执行。
+      // 节流：当持续触发事件时，保证一定时间段内只调用一次事件处理函数
+      /**
+      * 防抖应用场景：
+      * 1. search搜索联想，用户在不断输入值时，用防抖来节省请求资源
+      * 2. window在使用resize的时候，不断调整浏览器窗口大小，会不断的出发这个事件，用防抖让事件只触发一次
+      * 3. 防止重复提交
+      */
+      /**
+      * 节流应用场景：
+      * 1. 鼠标不断点击触发，mousedown单位时间内只触发一次。
+      * 2. 监听滚动事件，比如是否滑到底部自动加载更多，用throttle来判断
+      */
+      var count = 1;
+      var container = document.getElementById("container");
+      function getUserAction () {
+        // 大量的算法 逻辑 异步 回调
+        console.log(11111, this);
+        // container.innerHTML = count++;
+        this.innerHTML = count++;
+      }
+      // container.onmousemove = getUserAction;
+      // container.addEventListener('mousemove', getUserAction);
+      // container.onmousemove = debounce(getUserAction, 1000, true);
+      container.onmousemove = throttle(getUserAction, 1000);
+      // 防抖
+      function debounce (func, wait, flag) {
+        console.log(222222);
+        var timeout;
+        return function () {
+          console.log(333333);
+          var self = this; // 保存this指向为操作的dom节点
+          clearTimeout(timeout);
+          // timeout = setTimeout(func, wait); // 函数调用后，this指向由dom节点变成了window对象；原因是setTimeout是window对象上的函数，调用不指定，会改变this指向
+          if (flag) { // 增加 开始边界 与 结束边界 的控制
+            var callNow = !timeout; // 刷新页面、第一次进来，timeout不存在
+            timeout = setTimeout (function(){
+              timeout = null;
+            }, wait)
+            if (callNow) {
+              func.apply(self);
+            }
+          } else {
+            timeout = setTimeout (function(){
+              func.apply(self); // 保证正确的this指向,,用apply或者call均可
+              // func.call(self); // 保证正确的this指向
+            }, wait)
+          }
+        }
+      }
+
+      // 节流(时间戳 / 定时器实现)
+      function throttle (func, wait) {
+        var prexions = 0; // 时间标记
+        return function () {
+          var _self = this;
+          var now = +new Date(); // +new Date()=>调用Date原型上的valueOf()方法，得到数字类型时间戳1557718100462,,不写+得到的是字符串：Mon May 13 2019 11:28:43 GMT+0800 (中国标准时间)。
+          if (now - prexions > wait) {
+            func.apply(_self);
+            prexions = now;
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
