@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>table_download</title>
+    <style>
+      .table-wrap {
+        width: 900px;
+        margin: 50px auto;
+      }
+      .custom-table {
+        width: 100%;
+        margin-top: 25px;
+        border: 1px solid #54657e;
+        border-width: 1px 0 0 1px;
+        border-spacing: 0;
+      }
+      .custom-table td, .custom-table th {
+        padding: 0 18px;
+        height: 40px;
+        border-right: 1px solid #54657e;
+        border-bottom: 1px solid #54657e;
+        line-height: 1.4em;
+        text-align: center;
+        word-break: break-word;
+        word-wrap: break-word;
+      }
+      .custom-table th {
+        background: #eee;
+      }
+      .download-btn {
+        float: right;
+        color: #fff;
+        padding: 5px;
+        margin-right: 10px;
+        background-color: #20a0ff;
+        border: 1px solid #20a0ff;
+        border-radius: 4px;
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="table-wrap">
+      <button class="download-btn" onclick="downloadTable()">导出表格</button>
+      <button class="download-btn" onclick="downloadJSON()">导出数据</button>
+      <table class="custom-table" id="excel-table">
+        <!-- <thead>
+          <tr>
+            <th>序号</th>
+            <th>名称</th>
+            <th>单价（元）</th>
+            <th>销售额（元）</th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <td colspan="3">总计</td>
+            <td>200</td>
+          </tr>
+        </tfoot> -->
+        <tbody>
+          <tr>
+            <th>序号</th>
+            <th>名称</th>
+            <th>单价（元）</th>
+            <th>销售额（元）</th>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>苹果</td>
+            <td>10</td>
+            <td>50</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>香蕉</td>
+            <td>8</td>
+            <td>40</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>车厘子</td>
+            <td>20</td>
+            <td>80</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>雪梨</td>
+            <td>6</td>
+            <td>30</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <script src="http://mockjs.com/dist/mock.js"></script>
+    <script src="./toExcel.js"></script>
+    <script>
+      // mock.js'=> 生成随机数据
+      var data = Mock.mock({
+          // 属性 list 的值是一个数组，其中含有 1 到 10 个元素
+          'list|1-10': [{
+              // 属性 id 是一个自增数，起始值为 1，每次增 1
+              'nth|+1': 1,
+              'name': 'name',
+              'parice|1-100': 1,
+              'money|1-100': 1
+          }]
+      })
+      // 输出结果
+      // console.log(JSON.stringify(data, null, 4))
+      console.log(data, '111')
+      function downloadTable () {
+        console.log("根据页面表格dom导出");
+        Export.toExcel("#excel-table");
+      }
+      function downloadJSON () {
+        console.log("根据表格数据导出");
+        // 组装表头
+        var _data = [].concat(data.list)
+        _data.unshift({
+          nth: '序号',
+          name: '名称',
+          parice: '单价（元）',
+          money: '销售额（元）'
+        })
+        Export.toExcel(_data);
+      }
+    </script>
+  </body>
+</html>
