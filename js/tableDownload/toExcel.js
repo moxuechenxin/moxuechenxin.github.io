@@ -28,32 +28,31 @@
       }
     },
     _IEExport: function(data){
-      // ie报错：oWB对象不支持SavaAs()方法
+      // ie报错：oWB对象不支持SavaAs()方法,,利用try-catch进行错误跳过
       // 1.打开excel软件
-      var oXL = new ActiveXObject("Excel.Application")
+      var oXL = new ActiveXObject("Excel.Application");
       // 2.新建工作簿
-      // var oWB = oXL.Workbooks.Add
-      var oWB = oXL.Workbooks.Add()
+      var oWB = oXL.Workbooks.Add();
       // 3.激活新建的工作簿
       var oSheet = oWB.ActiveSheet
-      // var oSheet = oWB.Worksheets(1)
+      // var oSheet = oWB.Worksheets(1);
       if (typeof data === "string") {
         // 表格id
         var table = document.querySelector(data);
         // 创建装内容的容器
-        var sel = document.body.createTextRange()
+        var sel = document.body.createTextRange();
         // 将table中的内容移入容器中
         sel.moveToElementText(table)
-        // 选中移入的内容
+        //把表格中的内容移到TextRange中 
         try {
-          sel.select()
-        } catch(err){
+          sel.select;
+        }catch (err) {
           console.log(err)
         }
         // 复制容器的内容
         sel.execCommand("Copy")
         // 粘贴到excel工作簿中
-        oSheet.Paste()
+        oSheet.Paste();
       } else {
         var j = 0;
         for (key in data[0]) {
@@ -67,13 +66,21 @@
           }
         }
       }
-      // 设置文件名和保存类型
-      var filename = oXL.Application.GetSaveAsFilename(worksheet + ".xls", "Excel Spreadsheets (*.xls), *.xls")
-      // 保存工作簿
-      oWB.SavaAs(filename)
-      // 关闭退出
-      oWB.Close()
-      oXL.Quit()
+      try {
+          // 设置文件名和保存类型
+          var fname = oXL.Application.GetSaveAsFilename("Excel.xls", "Excel Spreadsheets (*.xls), *.xls");
+      }catch (e) {
+          print("Nested catch caught " + e);
+      }finally {
+          // 保存工作簿
+          oWB.SaveAs(fname);
+          // 关闭退出
+          oWB.Close(savechanges = false);
+          //xls.visible = false;
+          oXL.Quit();
+          oXL = null;
+          //结束excel进程，退出完成
+      }
     },
     _OtherExport:function(data){
       var content = '';
