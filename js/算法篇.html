@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>算法篇</title>
+  </head>
+  <body>
+    <div>
+      <img src="./img/算法类型比较.jpg" alt="算法类型比较">
+      <img src="./img/算法选择.jpg" alt="算法选择">
+    </div>
+    <script type="text/javascript">
+      // 2w名员工按年龄排序选择什么算法
+      /**
+       * 1.数据量大，重复率高
+       * 2.考虑高效率，稳定性
+       * 3.可以使用 归并或者堆排序
+       * 归并排序：
+       * 原理：1.拆分：将数组不断一分为二，直到都为单一元素；2.归并：从拆分的末端有序合并；
+      */
+      var arr = [3, 4, 5, 5, 6, 8, 2];
+      // 拆分
+      function mergeSort (arr) {
+        // console.log(arr, 'arr');
+        if (arr.length === 1) {
+          return arr
+        }
+        var len = arr.length
+        var mid = Math.floor(len / 2)
+        var left_arr = arr.slice(0, mid)
+        var right_arr = arr.slice(mid)
+        return merge(mergeSort(left_arr), mergeSort(right_arr));
+      }
+      // 归并
+      function merge (left, right) {
+        // console.log(left, 'left', right, 'right')
+        var result = [] // 中间容器，临时存放
+        while (left.length > 0 && right.length > 0) {
+          if (left[0] < right[0]) {
+            result.push(left.shift())
+          } else {
+            result.push(right.shift())
+          }  
+        }
+        return result.concat(left, right)
+      }
+      var _arr = mergeSort(arr)
+      // console.log(_arr, '_arr');
+    </script>
+  </body>
+</html>
